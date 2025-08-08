@@ -8,7 +8,7 @@ app.use(cors());
 
 const PORT = 3000;
 
-const mongoUrl = 'mongodb://belosh_mongo:npfanal2025@db:27017/?authSource=admin'; //mongodb://localhost:27017 /
+const mongoUrl = 'mongodb://localhost:27017'; //mongodb://belosh_mongo:npfanal2025@db:27017/?authSource=admin /
 const dbName = 'npf';
 const collectionName = 'npf_events';
 
