@@ -7,7 +7,7 @@ export default function ByCopyPage() {
   const [nameCopy, setNameCopy] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
-  const [count, setCount] = useState<number | null>(null);
+  const [results, setResults] = useState<{ name_copy: string; count: number }[]>([]);
 
   const handleSubmit = async () => {
     const trimmed = nameCopy.trim();
@@ -21,10 +21,10 @@ export default function ByCopyPage() {
           to: to ? new Date(to).getTime() : undefined,
         },
       });
-      setCount(res.data.count);
+      setResults(res.data.results || []);
     } catch (err) {
       console.error(err);
-      setCount(null);
+      setResults([]);
     }
   };
 
@@ -64,10 +64,14 @@ export default function ByCopyPage() {
         </button>
       </div>
 
-      {count !== null && (
-        <p className="text-lg font-semibold">
-          Всего кликов: <span className="text-blue-600">{count}</span>
-        </p>
+      {results.length > 0 && (
+        <ul className="space-y-1">
+          {results.map(r => (
+            <li key={r.name_copy}>
+              {r.name_copy} - <span className="text-blue-600">{r.count}</span>
+            </li>
+          ))}
+        </ul>
       )}
     </main>
   );
