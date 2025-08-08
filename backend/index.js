@@ -96,7 +96,7 @@ MongoClient.connect(mongoUrl)
         return res.status(400).json({ error: 'name_copy is required' });
       }
 
-      const query = { name_copy };
+      const query = { name_copy: { $regex: name_copy, $options: 'i' } };
 
       if (from || to) {
         query.date_time = {};
@@ -105,8 +105,16 @@ MongoClient.connect(mongoUrl)
       }
 
       try {
-        const count = await collection.countDocuments(query);
-        res.json({ name_copy, count });
+        const docs = await collection
+          .aggregate([
+            { $match: query },
+            { $group: { _id: '$name_copy', count: { $sum: 1 } } },
+            { $sort: { _id: 1 } },
+          ])
+          .toArray();
+
+        const results = docs.map(d => ({ name_copy: d._id, count: d.count }));
+        res.json({ results });
       } catch (err) {
         console.error('❌ Ошибка при подсчёте кликов по копии:', err);
         res.status(500).json({ error: 'Ошибка при подсчёте' });
