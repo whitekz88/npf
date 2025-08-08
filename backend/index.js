@@ -73,8 +73,16 @@ MongoClient.connect(mongoUrl)
       }
 
       try {
-        const count = await collection.countDocuments(query);
-        res.json({ count });
+        const docs = await collection
+          .aggregate([
+            { $match: query },
+            { $group: { _id: '$ask', count: { $sum: 1 } } },
+            { $sort: { _id: 1 } },
+          ])
+          .toArray();
+
+        const results = docs.map(d => ({ ask: d._id, count: d.count }));
+        res.json({ results });
       } catch (err) {
         console.error('❌ Ошибка при подсчёте:', err);
         res.status(500).json({ error: 'Ошибка при подсчёте' });
