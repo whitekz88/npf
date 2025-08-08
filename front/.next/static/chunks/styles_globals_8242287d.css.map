@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///C:/OSPanel/domains/mongo-express/front/styles/globals.css"],"sourcesContent":["body {\r\n}\r\n\r\nmain {\r\n  margin: 0 auto;\r\n  text-align: center;\r\n}\r\n"],"names":[],"mappings":"AAGA","debugId":null}}]
+}
