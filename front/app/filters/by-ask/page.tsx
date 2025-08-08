@@ -7,7 +7,7 @@ export default function ByAskPage() {
   const [ask, setAsk] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
-  const [count, setCount] = useState<number | null>(null);
+  const [results, setResults] = useState<{ ask: string; count: number }[] | null>(null);
 
   const handleSubmit = async () => {
     if (!ask && !from && !to) return;
@@ -20,10 +20,10 @@ export default function ByAskPage() {
           to: to ? new Date(to).getTime() : undefined,
         },
       });
-      setCount(res.data.count);
+      setResults(res.data.results);
     } catch (err) {
       console.error(err);
-      setCount(null);
+      setResults(null);
     }
   };
 
@@ -63,10 +63,14 @@ export default function ByAskPage() {
         </button>
       </div>
 
-      {count !== null && (
-        <div className="text-lg font-semibold">
-          Количество кликов: <span className="text-blue-600">{count}</span>
-        </div>
+      {results && (
+        <ul className="text-lg font-semibold space-y-1">
+          {results.map(({ ask, count }) => (
+            <li key={ask}>
+              {ask} - <span className="text-blue-600">{count}</span>
+            </li>
+          ))}
+        </ul>
       )}
     </main>
   );
