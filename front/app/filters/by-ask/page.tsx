@@ -10,12 +10,13 @@ export default function ByAskPage() {
   const [results, setResults] = useState<{ ask: string; count: number }[] | null>(null);
 
   const handleSubmit = async () => {
-    if (!ask && !from && !to) return;
+    const trimmedAsk = ask.trim();
+    if (!trimmedAsk && !from && !to) return;
 
     try {
       const res = await axios.get('http://localhost:3000/api/clicks', {
         params: {
-          ask,
+          ask: trimmedAsk,
           from: from ? new Date(from).getTime() : undefined,
           to: to ? new Date(to).getTime() : undefined,
         },
