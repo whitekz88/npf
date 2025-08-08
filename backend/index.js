@@ -88,6 +88,30 @@ MongoClient.connect(mongoUrl)
         res.status(500).json({ error: 'Ошибка при подсчёте' });
       }
     });
+
+    app.get('/api/clicks-by-copy', async (req, res) => {
+      const { name_copy, from, to } = req.query;
+
+      if (!name_copy) {
+        return res.status(400).json({ error: 'name_copy is required' });
+      }
+
+      const query = { name_copy };
+
+      if (from || to) {
+        query.date_time = {};
+        if (from) query.date_time.$gte = Number(from);
+        if (to) query.date_time.$lte = Number(to);
+      }
+
+      try {
+        const count = await collection.countDocuments(query);
+        res.json({ name_copy, count });
+      } catch (err) {
+        console.error('❌ Ошибка при подсчёте кликов по копии:', err);
+        res.status(500).json({ error: 'Ошибка при подсчёте' });
+      }
+    });
   })
   .catch(err => {
     console.error('❌ Не удалось подключиться к MongoDB:', err);
